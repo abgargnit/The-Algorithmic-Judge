@@ -2,7 +2,7 @@
   "name": "thealgorithmicjudge",
   "version": "1.0.0",
   "main": "index.js",
-  "type": "module",
+  "type": "module", 
   "scripts": {
     "dev": "nodemon api/index.js",
     "start": "node api/index.js"
