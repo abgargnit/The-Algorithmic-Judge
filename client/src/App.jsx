@@ -8,9 +8,6 @@ import Dashboard from './pages/dashboard';
 import Projects from './pages/projects';
 import Header from './components/Header';
 
-
-
-
 function App(){
   return (
     <BrowserRouter>
