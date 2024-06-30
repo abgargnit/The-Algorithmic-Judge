@@ -1,16 +1,21 @@
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch,useSelector } from 'react-redux';
+import { signInStart,signInSuccess,signInFailure } from '../redux/user/userSlice';
 
 export default function Signin() {
   // we will create a piece of state..
   const [formData, setFormData] = useState({}); // formData is to sav the items and setForm Data to change it 
   // now we will handle error 
-  const [errorMessage, seterrorMessage] = useState(null);
-  // use loading effect 
-  const [loading, setloading] = useState(false);
+  // const [errorMessage, seterrorMessage] = useState(null);
+  // // use loading effect 
+  // const [loading, setloading] = useState(false);
+  const {loading,error: errorMessage} = useSelector(state => state.user);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
 
 
   const handleChange = (e)=>{
@@ -20,11 +25,10 @@ export default function Signin() {
     e.preventDefault(); // this will prevent the default behaviour of reloading the page...
     // how will we submit it?
     if(!formData.email || !formData.password){
-      return seterrorMessage('All details are required !')
+      return dispatch(signInFailure('Please fill up all the details!'));
     }
     try {
-      setloading(true);
-      seterrorMessage(null);
+      dispatch(signInStart()); // we are using redux state here
       const res = await fetch('/api/auth/signin',{
       method:'POST',
       headers:{ 'Content-Type':'application/json'},
@@ -33,16 +37,15 @@ export default function Signin() {
       // we added proxy at vite.config.js file for server
       const data = await res.json();
       if(data.success === false){
-        return seterrorMessage(data.message);
+        dispatch(signInFailure(data.message));
       }
-      setloading(false);
       if(res.ok){
+        dispatch(signInSuccess(data));
         navigate('/')
       }
     } catch (error) {
       // this error is on client side
-      seterrorMessage(error.message);
-      setloading(false);
+      dispatch(signInFailure(error.message));
     }
   }
   return (

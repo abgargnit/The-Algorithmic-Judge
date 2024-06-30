@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    
 }, {timestamps:true} // mongo db will automatically store the timestamps..
 )
 
